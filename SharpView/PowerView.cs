@@ -19,6 +19,8 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Security.Principal;
+using System.Security;
+using System.Net;
 
 namespace SharpView
 {
@@ -4803,7 +4805,7 @@ namespace SharpView
                         foreach (var xor in args.XOR)
                         {
                             var PropertyName = xor.Key;
-                            var PropertyXorValue = (int)xor.Value;
+                            var PropertyXorValue = Convert.ToInt32(xor.Value);
                             Logger.Write_Verbose($@"[Set-DomainObject] XORing '{PropertyName}' with '{PropertyXorValue}' for object '{obj.Properties[@"samaccountname"][0]}'");
                             var TypeName = Entry.Properties[PropertyName][0].GetType();
 
@@ -5461,7 +5463,7 @@ namespace SharpView
                     TargetSIDs.AddRange(sid);
                 }
                 TargetObjectSID = TargetSIDs;
-                if (TargetSIDs != null)
+                if (TargetSIDs == null)
                 {
                     throw new Exception($@"[Get-DomainGPOUserLocalGroupMapping] Unable to retrieve SID for identity '{args.Identity}'");
                 }
@@ -7810,8 +7812,7 @@ namespace SharpView
                     Logger.Write_Verbose($@"[Set-DomainUserPassword] Attempting to set the password for user '{args.Identity}'");
                     try
                     {
-                        var TempCred = new System.Net.NetworkCredential("a", args.AccountPassword);
-                        User.SetPassword(TempCred.Password);
+                        User.SetPassword(args.AccountPassword);
                         User.Save();
                         Logger.Write_Verbose($@"[Set-DomainUserPassword] Password for user '{args.Identity}' successfully reset");
                     }
