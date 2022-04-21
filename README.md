@@ -1,6 +1,6 @@
 # SharpView
 .NET port of [PowerView](https://github.com/PowerShellMafia/PowerSploit/blob/dev/Recon/PowerView.ps1)
-Forked from the original [SharpView](https://github.com/tevora-threat/SharpView)
+forked from the original [SharpView](https://github.com/tevora-threat/SharpView)
 
 Modified to fix some of the errors I discovered while using it.
 
@@ -158,7 +158,6 @@ Get-NetGPOGroup
 ```
 
 Blog [Here](https://www.tevora.com/threat-blog/a-sharpview-and-more-aggressor/)
-Currently compiled for .NET 4.5.2 todo is support 3.0 (4.0 at minimum)
 
 ##### Known Issues
-* The arguments go through an automatic conversion. This is not really reliable, from what I can see it works for String arrays and Boolean values, and it can create Network Credentials if you supply them but other custom values will fail. I added a Dictionary conversion but other types might fail.
+* The arguments go through an automatic conversion. This is not really reliable, from what I can see it works for String arrays and Boolean values, and it can create Network Credentials if you supply them but other custom values will fail. I added a Dictionary conversion but other types might fail for now.
