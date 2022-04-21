@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace SharpView
@@ -18,7 +19,7 @@ namespace SharpView
         {
             if (args.Length == 0)
             {
-                Logger.Write_Output("Ex: SharpView.exe Method-Name -Switch -String domain -Array domain,user -Enum ResetPassword -IntEnum CREATED_BY_SYSTEM,APP_BASIC -PointEnum ResetPassword,All -Credential admin@domain.local/password");
+                Logger.Write_Output("Ex: SharpView.exe Method-Name -Switch -Dictionary key=value;key2=value2 -String domain -Array domain,user -Enum ResetPassword -IntEnum CREATED_BY_SYSTEM,APP_BASIC -PointEnum ResetPassword,All -Credential admin@domain.local/password");
                 Logger.Write_Output("Execute 'Sharpview.exe <Method-Name> -Help' to get arguments list and expected types");
                 return;
             }
@@ -480,8 +481,27 @@ namespace SharpView
                                 tc = new StringArrayConverter();
                             else if (pinfo.PropertyType.FullName == "System.Net.NetworkCredential")
                                 tc = new NetworkCredentialConverter();
-                            var argValue = tc.ConvertFromString(strValue);
-                            pinfo.SetValue(argObject, argValue);
+                            if (pinfo.PropertyType.FullName.Contains("Dictionary"))
+                            {
+                                Dictionary<string, object> argDict = new Dictionary<string, object>();
+
+                                string pattern = "(\\w+)[=]([\\w\\s'\",.]+)(;)?";
+                                var matches = Regex.Matches(strValue, pattern);
+                                foreach (Match m in matches)
+                                {
+                                    string key = m.Groups[1].Value;
+                                    string value = m.Groups[2].Value;
+                                    argDict.Add(key, value);
+                                }
+
+                                pinfo.SetValue(argObject, argDict);
+                            }
+                            else
+                            {
+                                var argValue = tc.ConvertFromString(strValue);
+                                pinfo.SetValue(argObject, argValue);
+                            }
+                            
                         }
                         catch (Exception ex)
                         {
