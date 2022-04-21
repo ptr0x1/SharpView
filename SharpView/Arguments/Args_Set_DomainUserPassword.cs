@@ -16,8 +16,7 @@ namespace SharpView.Arguments
         public string UserIdentity { get { return Identity; } set { Identity = value; } }
         public string User { get { return Identity; } set { Identity = value; } }
 
-        public System.Security.SecureString AccountPassword { get; set; }
-        public System.Security.SecureString Password { get { return AccountPassword; } set { AccountPassword = value; } }
+        public string AccountPassword { get; set; }
 
         public string Domain { get; set; }
 
