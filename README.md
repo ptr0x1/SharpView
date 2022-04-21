@@ -1,13 +1,30 @@
 # SharpView
 .NET port of [PowerView](https://github.com/PowerShellMafia/PowerSploit/blob/dev/Recon/PowerView.ps1)
+Forked from the original [SharpView](https://github.com/tevora-threat/SharpView)
+
+Modified to fix some of the errors I discovered while using it.
 
 #### Usage:
 ```
 C:\>SharpView.exe Get-DomainController -Domain test.local -Server dc.test.local -Credential admin@test.local/password  
 ```
+
+Get the help function for a specific method:
+
 ```
 C:\>SharpView.exe Get-DomainController -Help
 Get-DomainController -Domain <String> -Server <String> -DomainController <String> -LDAP <Boolean> -Credential <NetworkCredential>
+```
+
+**Note that argument names are case-sensitive!**
+
+##### Argument types:
+
+All supplied arguments are strings that SharpView has to convert to the expected type. Running SharpView without arguments shows examples of how to pass given types. Currently String, Array and Dictionary is working as expected and covers a large part of methods.
+
+```
+Ex: SharpView.exe Method-Name -Switch -Dictionary key=value;key2=value2 -String domain -Array domain,user -Enum ResetPassword -IntEnum CREATED_BY_SYSTEM,APP_BASIC -PointEnum ResetPassword,All -Credential admin@domain.local/password
+Execute 'Sharpview.exe <Method-Name> -Help' to get arguments list and expected types
 ```
 
 #### Available methods
@@ -140,9 +157,8 @@ Get-DomainGPOLocalGroup
 Get-NetGPOGroup
 ```
 
-Blog [Here](https://threat.tevora.com/a-sharpview-and-more-aggressor)
+Blog [Here](https://www.tevora.com/threat-blog/a-sharpview-and-more-aggressor/)
 Currently compiled for .NET 4.5.2 todo is support 3.0 (4.0 at minimum)
 
-##### TODO
-* Fix any broken issues
-* Support .NET 3.0 (or 4.0 depending on CS execute-assembly)
+##### Known Issues
+* The arguments go through an automatic conversion. This is not really reliable, from what I can see it works for String arrays and Boolean values, and it can create Network Credentials if you supply them but other custom values will fail. I added a Dictionary conversion but other types might fail.
